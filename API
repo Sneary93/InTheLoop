@@ -1,1 +1,44 @@
-pip install PyGithub
+from github import Github
+
+# Use your personal access token
+g = Github("your_personal_access_token")
+
+repo = g.get_user().get_repo("repository_name")
+
+def create_event_issue(title, body):
+    issue = repo.create_issue(
+        title=title,
+        body=body
+    )
+    print(f"Issue created: {issue.title}")
+
+# Example usage
+create_event_issue("Plan Venue for Annual Meetup", "We need to finalize the venue by the end of the week.")
+
+import argparse
+from github import Github
+
+# GitHub Authentication
+g = Github("your_personal_access_token")
+repo = g.get_user().get_repo("repository_name")
+
+def create_event_issue(title, body):
+    issue = repo.create_issue(title=title, body=body)
+    print(f"Issue created: {issue.title}")
+
+def list_issues():
+    issues = repo.get_issues(state="open")
+    for issue in issues:
+        print(f"{issue.number}: {issue.title}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Event Planning App")
+    parser.add_argument("--create", nargs=2, metavar=("TITLE", "BODY"), help="Create a new event issue")
+    parser.add_argument("--list", action="store_true", help="List all event issues")
+
+    args = parser.parse_args()
+
+    if args.create:
+        create_event_issue(args.create[0], args.create[1])
+    elif args.list:
+        list_issues()
